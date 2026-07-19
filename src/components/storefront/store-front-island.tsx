@@ -1,6 +1,8 @@
 "use client"
 
 import { StoreFront } from "./store-front"
+import { submitContact } from "@/application/use-cases"
+import { createContainer } from "@/infrastructure/di/container"
 import type { Category, ContactFormValues, HeroSlide, Product, ProductVariant } from "@/domain/models"
 
 interface StoreFrontIslandProps {
@@ -16,14 +18,15 @@ export function StoreFrontIsland({
   heroSlides,
   contactImageUrl,
 }: StoreFrontIslandProps) {
+  const container = createContainer()
+
   const handleSelectVariant = (variant: ProductVariant, product: Product) => {
     // Aquí va tu lógica (abrir detalle, agregar al carrito, etc.)
     console.log("[storefront] Variante seleccionada:", product.name, variant)
   }
 
   const handleContactSubmit = async (values: ContactFormValues) => {
-    // Reemplaza esto por el método que implementarás más adelante.
-    console.log("[storefront] Formulario de contacto enviado:", values)
+    await submitContact({ contactService: container.contactService }, values)
   }
 
   const handleHeroSlideClick = (slide: HeroSlide) => {
