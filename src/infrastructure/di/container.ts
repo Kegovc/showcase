@@ -3,6 +3,7 @@ import type {
   CategoryRepository,
   ContactService,
   HeroRepository,
+  PaymentService,
   ProductRepository,
 } from "@/domain/ports"
 import {
@@ -10,6 +11,7 @@ import {
   mockCategoryRepository,
   mockContactService,
   mockHeroRepository,
+  mockPaymentService,
   mockProductRepository,
 } from "@/infrastructure/adapters/mock"
 import { mockContactImageUrl } from "@/infrastructure/data/mock-data"
@@ -20,6 +22,7 @@ export interface Container {
   heroRepository: HeroRepository
   contactService: ContactService
   cartRepository: CartRepository
+  paymentService: PaymentService
   contactImageUrl: string
 }
 
@@ -33,6 +36,7 @@ export function createContainer(): Container {
     heroRepository: mockHeroRepository,
     contactService: mockContactService,
     cartRepository: mockCartRepository,
+    paymentService: mockPaymentService,
     contactImageUrl: mockContactImageUrl,
   }
 }

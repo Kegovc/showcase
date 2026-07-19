@@ -1,14 +1,36 @@
 "use client"
 
+import { useState } from "react"
 import { X, ShoppingBag, Trash2 } from "lucide-react"
 import { axis4LabelFor, buildVariantName } from "@/domain/models"
+import { createPreference } from "@/application/use-cases"
+import { createContainer } from "@/infrastructure/di/container"
 import { useCart } from "./cart-context"
+
+const container = createContainer()
 
 const formatPrice = (price: number) =>
   new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" }).format(price)
 
 export function CartDrawer() {
   const { cart, total, count, open, setOpen, clear } = useCart()
+  const [paying, setPaying] = useState(false)
+  const [paid, setPaid] = useState<{ id: string; total: number } | null>(null)
+
+  const handlePay = async () => {
+    try {
+      setPaying(true)
+      const pref = await createPreference(
+        { paymentService: container.paymentService },
+        cart,
+      )
+      // Mock: no redirige a MP real. Simula confirmación.
+      setPaid({ id: pref.id, total: pref.total })
+      await clear()
+    } finally {
+      setPaying(false)
+    }
+  }
 
   return (
     <>
@@ -88,7 +110,7 @@ export function CartDrawer() {
             <button
               type="button"
               onClick={() => void clear()}
-              disabled={cart.items.length === 0}
+              disabled={cart.items.length === 0 || paying}
               className="inline-flex items-center gap-1.5 rounded-md border border-border px-3 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted disabled:opacity-50"
             >
               <Trash2 className="h-4 w-4" />
@@ -96,15 +118,20 @@ export function CartDrawer() {
             </button>
             <button
               type="button"
-              disabled={cart.items.length === 0}
+              disabled={cart.items.length === 0 || paying}
               className="flex-1 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-50"
-              onClick={() =>
-                alert("Pago simulado (Mercado Pago se integra en fase posterior).")
-              }
+              onClick={() => void handlePay()}
             >
-              Pagar
+              {paying ? "Procesando..." : "Pagar"}
             </button>
           </div>
+
+          {paid && (
+            <p className="mt-3 rounded-md bg-primary/10 px-3 py-2 text-sm text-primary" role="status">
+              Pago simulado exitoso (preferencia {paid.id}). Mercado Pago real se
+              integra en una fase posterior.
+            </p>
+          )}
         </footer>
       </aside>
     </>
