@@ -21,6 +21,7 @@ const initialValues: ContactFormValues = { name: "", email: "", message: "" }
 export function ContactSection({ imageUrl, onSubmit }: ContactSectionProps) {
   const [values, setValues] = useState<ContactFormValues>(initialValues)
   const [submitting, setSubmitting] = useState(false)
+  const [status, setStatus] = useState<"idle" | "success" | "error">("idle")
 
   const update = (field: keyof ContactFormValues) => (e: { target: { value: string } }) =>
     setValues((prev) => ({ ...prev, [field]: e.target.value }))
@@ -29,8 +30,12 @@ export function ContactSection({ imageUrl, onSubmit }: ContactSectionProps) {
     e.preventDefault()
     try {
       setSubmitting(true)
+      setStatus("idle")
       await onSubmit?.(values)
       setValues(initialValues)
+      setStatus("success")
+    } catch {
+      setStatus("error")
     } finally {
       setSubmitting(false)
     }
@@ -105,6 +110,17 @@ export function ContactSection({ imageUrl, onSubmit }: ContactSectionProps) {
               <Send className="h-4 w-4" aria-hidden="true" />
             </button>
           </div>
+
+          {status === "success" && (
+            <p className="mt-3 text-sm text-primary" role="status">
+              ¡Gracias! Tu mensaje ha sido enviado (mock).
+            </p>
+          )}
+          {status === "error" && (
+            <p className="mt-3 text-sm text-destructive" role="alert">
+              Ocurrió un error al enviar. Intenta de nuevo.
+            </p>
+          )}
         </form>
       </div>
     </section>

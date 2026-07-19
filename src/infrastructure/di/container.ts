@@ -1,10 +1,12 @@
 import type {
+  CartRepository,
   CategoryRepository,
   ContactService,
   HeroRepository,
   ProductRepository,
 } from "@/domain/ports"
 import {
+  mockCartRepository,
   mockCategoryRepository,
   mockContactService,
   mockHeroRepository,
@@ -17,6 +19,7 @@ export interface Container {
   productRepository: ProductRepository
   heroRepository: HeroRepository
   contactService: ContactService
+  cartRepository: CartRepository
   contactImageUrl: string
 }
 
@@ -29,6 +32,7 @@ export function createContainer(): Container {
     productRepository: mockProductRepository,
     heroRepository: mockHeroRepository,
     contactService: mockContactService,
+    cartRepository: mockCartRepository,
     contactImageUrl: mockContactImageUrl,
   }
 }

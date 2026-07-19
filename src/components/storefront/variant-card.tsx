@@ -1,10 +1,11 @@
 "use client"
 
+import { buildVariantName, axis4LabelFor } from "@/domain/models"
 import type { ProductVariant } from "@/domain/models"
 
 interface VariantCardProps {
   variant: ProductVariant
-  /** Formato de precio opcional; por defecto usa USD */
+  /** Formato de precio opcional; por defecto usa MXN */
   formatPrice?: (price: number) => string
   onSelect?: (variant: ProductVariant) => void
 }
@@ -13,6 +14,7 @@ const defaultFormatPrice = (price: number) =>
   new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" }).format(price)
 
 export function VariantCard({ variant, formatPrice = defaultFormatPrice, onSelect }: VariantCardProps) {
+  const axis4Label = axis4LabelFor(variant.type)
   return (
     <button
       type="button"
@@ -23,17 +25,24 @@ export function VariantCard({ variant, formatPrice = defaultFormatPrice, onSelec
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={variant.imageUrl || "/placeholder.svg"}
-          alt={variant.name}
+          alt={buildVariantName(variant)}
           className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
           loading="lazy"
         />
-        <span className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-foreground/80 text-xs font-semibold text-background">
-          {variant.size}
+        <span className="absolute right-2 top-2 flex h-7 items-center justify-center rounded-full bg-foreground/80 px-2 text-xs font-semibold text-background">
+          {variant.variant}
         </span>
       </div>
-      <div className="flex items-center justify-between gap-2 px-3 py-2.5">
-        <span className="truncate text-sm text-foreground">{variant.name}</span>
-        <span className="shrink-0 text-sm font-semibold text-foreground">{formatPrice(variant.price)}</span>
+      <div className="flex flex-col gap-1 px-3 py-2.5">
+        <span className="text-xs text-muted-foreground">
+          {variant.type} · {variant.format}
+        </span>
+        <span className="truncate text-sm text-foreground">
+          {variant.category} · {axis4Label}: {variant.variant}
+        </span>
+        <span className="shrink-0 text-sm font-semibold text-foreground">
+          {formatPrice(variant.price)}
+        </span>
       </div>
     </button>
   )

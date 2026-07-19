@@ -3,10 +3,10 @@ import type {
   HeroRepository,
   ProductRepository,
 } from "@/domain/ports"
-import type { Category, HeroSlide, Product } from "@/domain/models"
+import type { CategoryRecord, HeroSlide, Product } from "@/domain/models"
 
 export interface StorefrontData {
-  categories: Category[]
+  categories: CategoryRecord[]
   productsByCategory: Record<string, Product[]>
   heroSlides: HeroSlide[]
   contactImageUrl: string

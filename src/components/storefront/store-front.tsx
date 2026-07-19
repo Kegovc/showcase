@@ -5,10 +5,10 @@ import { CategoryTabs } from "./category-tabs"
 import { HeroBanner } from "./hero-banner"
 import { ProductRow } from "./product-row"
 import { ContactSection } from "./contact-section"
-import type { Category, ContactFormValues, HeroSlide, Product, ProductVariant } from "@/domain/models"
+import type { CategoryRecord, ContactFormValues, HeroSlide, Product, ProductVariant } from "@/domain/models"
 
 interface StoreFrontProps {
-  categories: Category[]
+  categories: CategoryRecord[]
   /** Productos agrupados por id de categoría */
   productsByCategory: Record<string, Product[]>
   /** Slides del hero (promos y/o colecciones) */

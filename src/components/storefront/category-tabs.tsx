@@ -1,10 +1,10 @@
 "use client"
 
 import { cn } from "@/lib/utils"
-import type { Category } from "@/domain/models"
+import type { CategoryRecord } from "@/domain/models"
 
 interface CategoryTabsProps {
-  categories: Category[]
+  categories: CategoryRecord[]
   activeId: string
   onChange: (id: string) => void
 }

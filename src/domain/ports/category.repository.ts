@@ -1,5 +1,5 @@
-import type { Category } from "../models"
+import type { CategoryRecord } from "../models"
 
 export interface CategoryRepository {
-  list(): Promise<Category[]>
+  list(): Promise<CategoryRecord[]>
 }
