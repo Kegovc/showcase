@@ -1,14 +1,23 @@
 ---
 import Layout from '@/layouts/Layout.astro'
 import { StoreFrontIsland } from '@/components/storefront/store-front-island'
+import { getStorefrontData } from '@/application/use-cases'
+import type { Category, HeroSlide, Product, ProductVariant } from '@/domain/models'
 import type {
-  Category,
-  HeroSlide,
-  Product,
-  ProductVariant,
-} from '@/components/storefront/types'
+  CategoryRepository,
+  HeroRepository,
+  ProductRepository,
+} from '@/domain/ports'
 
-// --- Datos de ejemplo (reemplázalos por los de tu API/CMS más adelante) ---
+// --- Adaptadores mock temporales (se reemplazan en Fase 3 por infraestructura real) ---
+
+const makeVariants = (img: string, base: string): ProductVariant[] => [
+  { id: `${base}-1`, name: 'Variante 1', size: 'S', price: 999.99, imageUrl: img },
+  { id: `${base}-2`, name: 'Variante 1', size: 'M', price: 999.99, imageUrl: img },
+  { id: `${base}-3`, name: 'Variante 2', size: 'L', price: 999.99, imageUrl: img },
+  { id: `${base}-4`, name: 'Variante 2', size: 'S', price: 999.99, imageUrl: img },
+  { id: `${base}-5`, name: 'Variante 3', size: 'M', price: 999.99, imageUrl: img },
+]
 
 const categories: Category[] = [
   { id: 'caballero', name: 'Caballero' },
@@ -42,14 +51,6 @@ const heroSlides: HeroSlide[] = [
   },
 ]
 
-const makeVariants = (img: string, base: string): ProductVariant[] => [
-  { id: `${base}-1`, name: 'Variante 1', size: 'S', price: 999.99, imageUrl: img },
-  { id: `${base}-2`, name: 'Variante 1', size: 'M', price: 999.99, imageUrl: img },
-  { id: `${base}-3`, name: 'Variante 2', size: 'L', price: 999.99, imageUrl: img },
-  { id: `${base}-4`, name: 'Variante 2', size: 'S', price: 999.99, imageUrl: img },
-  { id: `${base}-5`, name: 'Variante 3', size: 'M', price: 999.99, imageUrl: img },
-]
-
 const productsByCategory: Record<string, Product[]> = {
   caballero: [
     { id: 'p1', name: 'Producto 1', variants: makeVariants('/images/product-shirt.png', 'p1') },
@@ -60,14 +61,31 @@ const productsByCategory: Record<string, Product[]> = {
     { id: 'p4', name: 'Producto 2', variants: makeVariants('/images/product-shirt.png', 'p4') },
   ],
 }
+
+const categoryRepository: CategoryRepository = {
+  list: async () => categories,
+}
+const productRepository: ProductRepository = {
+  listByCategory: async () => productsByCategory,
+}
+const heroRepository: HeroRepository = {
+  list: async () => heroSlides,
+}
+
+const storefront = await getStorefrontData({
+  categoryRepository,
+  productRepository,
+  heroRepository,
+  contactImageUrl: '/images/contact.png',
+})
 ---
 
 <Layout>
   <StoreFrontIsland
     client:load
-    categories={categories}
-    productsByCategory={productsByCategory}
-    heroSlides={heroSlides}
-    contactImageUrl="/images/contact.png"
+    categories={storefront.categories}
+    productsByCategory={storefront.productsByCategory}
+    heroSlides={storefront.heroSlides}
+    contactImageUrl={storefront.contactImageUrl}
   />
 </Layout>

@@ -1,9 +1,10 @@
 "use client"
 
-import { type FormEvent, useState } from "react"
+import { useState } from "react"
+import type React from "react"
 import { Send } from "lucide-react"
 import { cn } from "@/lib/utils"
-import type { ContactFormValues } from "./types"
+import type { ContactFormValues } from "@/domain/models"
 
 interface ContactSectionProps {
   imageUrl: string
@@ -24,7 +25,7 @@ export function ContactSection({ imageUrl, onSubmit }: ContactSectionProps) {
   const update = (field: keyof ContactFormValues) => (e: { target: { value: string } }) =>
     setValues((prev) => ({ ...prev, [field]: e.target.value }))
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault()
     try {
       setSubmitting(true)

@@ -1,7 +1,7 @@
 "use client"
 
 import { cn } from "@/lib/utils"
-import type { Category } from "./types"
+import type { Category } from "@/domain/models"
 
 interface CategoryTabsProps {
   categories: Category[]

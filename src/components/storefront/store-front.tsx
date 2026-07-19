@@ -5,7 +5,7 @@ import { CategoryTabs } from "./category-tabs"
 import { HeroBanner } from "./hero-banner"
 import { ProductRow } from "./product-row"
 import { ContactSection } from "./contact-section"
-import type { Category, ContactFormValues, HeroSlide, Product, ProductVariant } from "./types"
+import type { Category, ContactFormValues, HeroSlide, Product, ProductVariant } from "@/domain/models"
 
 interface StoreFrontProps {
   categories: Category[]
@@ -44,7 +44,7 @@ export function StoreFront({
       </div>
 
       {products.length > 0 ? (
-        products.map((product, index) => (
+        products.map((product) => (
           <div key={product.id}>
             <ProductRow product={product} formatPrice={formatPrice} onSelectVariant={onSelectVariant} />
             <div className="mx-auto max-w-5xl px-4">

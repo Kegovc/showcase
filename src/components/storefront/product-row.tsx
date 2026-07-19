@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react"
 import useEmblaCarousel from "embla-carousel-react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
-import type { Product, ProductVariant } from "./types"
+import type { Product, ProductVariant } from "@/domain/models"
 import { VariantCard } from "./variant-card"
 
 interface ProductRowProps {

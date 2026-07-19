@@ -1,6 +1,6 @@
 "use client"
 
-import type { ProductVariant } from "./types"
+import type { ProductVariant } from "@/domain/models"
 
 interface VariantCardProps {
   variant: ProductVariant

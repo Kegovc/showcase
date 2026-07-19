@@ -1,7 +1,7 @@
 "use client"
 
 import { StoreFront } from "./store-front"
-import type { Category, ContactFormValues, HeroSlide, Product, ProductVariant } from "./types"
+import type { Category, ContactFormValues, HeroSlide, Product, ProductVariant } from "@/domain/models"
 
 interface StoreFrontIslandProps {
   categories: Category[]
