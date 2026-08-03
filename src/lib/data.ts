@@ -1,7 +1,5 @@
 import type { CategoryRecord, HeroSlide, Product } from "@/types/storefront";
 
-const BASE = import.meta.env.BASE_URL || "/";
-
 const makeProduct = (
   id: string,
   name: string,
@@ -11,7 +9,7 @@ const makeProduct = (
   variant: string,
   price: number,
   imageUrl: string,
-): Product => ({ id, name, category, type, format, variant, price, imageUrl: `${BASE}${imageUrl.replace(/^\//, "")}` });
+): Product => ({ id, name, category, type, format, variant, price, imageUrl });
 
 const categories: CategoryRecord[] = [
   { id: "caballero", name: "Caballero", kind: "caballero" },
@@ -21,7 +19,7 @@ const categories: CategoryRecord[] = [
 const heroSlides: HeroSlide[] = [
   {
     id: "s1",
-    imageUrl: `${BASE}images/hero-collection.png`,
+    imageUrl: "images/hero-collection.png",
     subtitle: "Nueva colección",
     title: "Otoño / Invierno 2026",
     ctaLabel: "Ver colección",
@@ -29,7 +27,7 @@ const heroSlides: HeroSlide[] = [
   },
   {
     id: "s2",
-    imageUrl: `${BASE}images/hero-sale.png`,
+    imageUrl: "images/hero-sale.png",
     subtitle: "Tiempo limitado",
     title: "Hasta 40% de descuento",
     ctaLabel: "Comprar ofertas",
@@ -37,7 +35,7 @@ const heroSlides: HeroSlide[] = [
   },
   {
     id: "s3",
-    imageUrl: `${BASE}images/hero.png`,
+    imageUrl: "images/hero.png",
     subtitle: "Para él y para ella",
     title: "Esenciales del guardarropa",
     ctaLabel: "Explorar",
@@ -69,7 +67,7 @@ const productsByCategory: Record<string, Product[]> = {
   ],
 };
 
-const contactImageUrl = `${BASE}images/contact.png`;
+const contactImageUrl = "images/contact.png";
 
 export async function getCategories(): Promise<CategoryRecord[]> {
   return categories;
