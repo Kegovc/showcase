@@ -5,8 +5,8 @@ import sitemap from '@astrojs/sitemap'
 import tailwindcss from '@tailwindcss/vite'
 
 const isProduction = process.env.NODE_ENV === 'production';
-const repoName = 'e-commerce-clothing-app';
-const githubUser = 'TU_USUARIO_GITHUB'; // CAMBIA ESTO por tu usuario de GitHub
+const repoName = 'showcase';
+const githubUser = 'kegovc';
 
 // https://astro.build/config
 export default defineConfig({
