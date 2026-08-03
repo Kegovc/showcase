@@ -1,24 +1,49 @@
-# build output
-dist/
-# generated types
-.astro/
+# Dependencies
+node_modules
+.pnp
+.pnp.js
 
-# dependencies
-node_modules/
+# Build outputs
+dist
+dist-ssr
+*.local
 
-# logs
+# IDE
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
 npm-debug.log*
+pnpm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-pnpm-debug.log*
 
-# environment variables
-.env
-.env.production
-.env*.local
+# Testing
+coverage
+.nyc_output
 
-# macOS-specific files
-.DS_Store
+# TypeScript
+*.tsbuildinfo
 
-# jetbrains setting folder
-.idea/
+# Supabase
+.supabase
+
+# Turbo
+.turbo
+
+# Misc
+*.tgz
+.cache
