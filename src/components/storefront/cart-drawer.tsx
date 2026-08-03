@@ -40,11 +40,10 @@ function CartItemRow({ item, allProducts }: { item: CartItem; allProducts: Produ
     setAxis4(item.variant);
   }, [item]);
 
-  const resolved: Product | undefined = family.find(
-    (p) => p.format === format && p.variant === axis4,
-  );
-
   const handleChange = async () => {
+    const resolved = family.find(
+      (p) => p.format === format && p.variant === axis4,
+    );
     if (!resolved) return;
     await replace(item.id, resolved);
   };
