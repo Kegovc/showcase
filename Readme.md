@@ -39,3 +39,5 @@ public/                    assets estáticos (imágenes, iconos)
 
 
 > opencode -s ses_087dc2718ffe7xIYsxGdrbsx1O
+## ponytail
+> opencode -s ses_03ae5426dffeuHRPWZsS8l2XDt
