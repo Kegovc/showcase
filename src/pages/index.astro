@@ -1,25 +1,8 @@
 ---
 import Layout from '@/layouts/Layout.astro'
 import { StoreFrontIsland } from '@/components/storefront/store-front-island'
-import { getStorefrontData } from '@/application/use-cases'
-import { createContainer } from '@/infrastructure/di/container'
-
-const container = createContainer()
-
-const storefront = await getStorefrontData({
-  categoryRepository: container.categoryRepository,
-  productRepository: container.productRepository,
-  heroRepository: container.heroRepository,
-  contactImageUrl: container.contactImageUrl,
-})
 ---
 
 <Layout>
-  <StoreFrontIsland
-    client:load
-    categories={storefront.categories}
-    productsByCategory={storefront.productsByCategory}
-    heroSlides={storefront.heroSlides}
-    contactImageUrl={storefront.contactImageUrl}
-  />
+  <StoreFrontIsland client:load />
 </Layout>

@@ -1,22 +1,16 @@
-"use client"
+"use client";
 
-import { ShoppingBag } from "lucide-react"
-import { StoreFront } from "./store-front"
-import { CartProvider, useCart } from "./cart-context"
-import { CartDrawer } from "./cart-drawer"
-import { submitContact } from "@/application/use-cases"
-import { createContainer } from "@/infrastructure/di/container"
-import type { CategoryRecord, ContactFormValues, HeroSlide, Product, ProductVariant } from "@/domain/models"
-
-interface StoreFrontIslandProps {
-  categories: CategoryRecord[]
-  productsByCategory: Record<string, Product[]>
-  heroSlides: HeroSlide[]
-  contactImageUrl: string
-}
+import { useEffect, useState } from "react";
+import { ShoppingBag } from "lucide-react";
+import { StoreFront } from "./store-front";
+import { CartProvider, useCart } from "@/lib/cart";
+import { CartDrawer } from "./cart-drawer";
+import { getStorefrontData } from "@/lib/data";
+import { sendContact } from "@/lib/contact";
+import type { CategoryRecord, ContactFormValues, HeroSlide, Product } from "@/types/storefront";
 
 function CartButton() {
-  const { count, setOpen } = useCart()
+  const { count, setOpen } = useCart();
   return (
     <button
       type="button"
@@ -31,30 +25,44 @@ function CartButton() {
         </span>
       )}
     </button>
-  )
+  );
 }
 
-function StoreFrontInner({
-  categories,
-  productsByCategory,
-  heroSlides,
-  contactImageUrl,
-}: StoreFrontIslandProps) {
-  const { add } = useCart()
-  const container = createContainer()
+function StoreFrontInner() {
+  const { add } = useCart();
+  const [data, setData] = useState<{
+    categories: CategoryRecord[];
+    productsByCategory: Record<string, Product[]>;
+    heroSlides: HeroSlide[];
+    contactImageUrl: string;
+  } | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const handleSelectVariant = async (variant: ProductVariant, product: Product) => {
-    void product
-    await add(variant)
+  useEffect(() => {
+    getStorefrontData().then((d) => {
+      setData(d);
+      setLoading(false);
+    });
+  }, []);
+
+  if (loading || !data) {
+    return (
+      <div className="flex h-64 items-center justify-center">
+        <span className="text-muted-foreground">Cargando tienda…</span>
+      </div>
+    );
   }
+
+  const { categories, productsByCategory, heroSlides, contactImageUrl } = data;
+  const allProducts = Object.values(productsByCategory).flat();
 
   const handleContactSubmit = async (values: ContactFormValues) => {
-    await submitContact({ contactService: container.contactService }, values)
-  }
+    await sendContact(values);
+  };
 
   const handleHeroSlideClick = (slide: HeroSlide) => {
-    console.log("[storefront] Slide del hero:", slide)
-  }
+    console.log("[storefront] Slide del hero:", slide);
+  };
 
   return (
     <>
@@ -64,19 +72,19 @@ function StoreFrontInner({
         productsByCategory={productsByCategory}
         heroSlides={heroSlides}
         contactImageUrl={contactImageUrl}
-        onSelectVariant={handleSelectVariant}
         onHeroSlideClick={handleHeroSlideClick}
         onContactSubmit={handleContactSubmit}
+        onAddProduct={add}
       />
-      <CartDrawer />
+      <CartDrawer allProducts={allProducts} />
     </>
-  )
+  );
 }
 
-export function StoreFrontIsland(props: StoreFrontIslandProps) {
+export function StoreFrontIsland() {
   return (
     <CartProvider>
-      <StoreFrontInner {...props} />
+      <StoreFrontInner />
     </CartProvider>
-  )
+  );
 }

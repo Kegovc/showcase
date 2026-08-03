@@ -1,23 +1,21 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { CategoryTabs } from "./category-tabs"
-import { HeroBanner } from "./hero-banner"
-import { ProductRow } from "./product-row"
-import { ContactSection } from "./contact-section"
-import type { CategoryRecord, ContactFormValues, HeroSlide, Product, ProductVariant } from "@/domain/models"
+import { useState } from "react";
+import { CategoryTabs } from "./category-tabs";
+import { HeroBanner } from "./hero-banner";
+import { ProductRow } from "./product-row";
+import { ContactSection } from "./contact-section";
+import { defaultCatalog } from "@/types/storefront";
+import type { CategoryRecord, ContactFormValues, HeroSlide, Product } from "@/types/storefront";
 
 interface StoreFrontProps {
-  categories: CategoryRecord[]
-  /** Productos agrupados por id de categoría */
-  productsByCategory: Record<string, Product[]>
-  /** Slides del hero (promos y/o colecciones) */
-  heroSlides: HeroSlide[]
-  contactImageUrl: string
-  formatPrice?: (price: number) => string
-  onSelectVariant?: (variant: ProductVariant, product: Product) => void
-  onHeroSlideClick?: (slide: HeroSlide) => void
-  onContactSubmit?: (values: ContactFormValues) => void | Promise<void>
+  categories: CategoryRecord[];
+  productsByCategory: Record<string, Product[]>;
+  heroSlides: HeroSlide[];
+  contactImageUrl: string;
+  onHeroSlideClick?: (slide: HeroSlide) => void;
+  onContactSubmit?: (values: ContactFormValues) => void | Promise<void>;
+  onAddProduct?: (product: Product) => void;
 }
 
 export function StoreFront({
@@ -25,13 +23,23 @@ export function StoreFront({
   productsByCategory,
   heroSlides,
   contactImageUrl,
-  formatPrice,
-  onSelectVariant,
   onHeroSlideClick,
   onContactSubmit,
+  onAddProduct,
 }: StoreFrontProps) {
-  const [activeCategory, setActiveCategory] = useState(categories[0]?.id ?? "")
-  const products = productsByCategory[activeCategory] ?? []
+  const [activeCategory, setActiveCategory] = useState(categories[0]?.id ?? "");
+  const products = productsByCategory[activeCategory] ?? [];
+
+  const typeLabels: Record<string, string> = {
+    playera: "Playeras",
+    shorts: "Shorts",
+    buff: "Buffs",
+    earcuffs: "Earcuffs",
+  };
+
+  const typesWithProducts = defaultCatalog.types.filter((type) =>
+    products.some((p) => p.type === type),
+  );
 
   return (
     <main className="min-h-screen bg-background">
@@ -43,14 +51,14 @@ export function StoreFront({
         <hr className="border-border" />
       </div>
 
-      {products.length > 0 ? (
-        products.map((product) => (
-          <div key={product.id}>
-            <ProductRow product={product} formatPrice={formatPrice} onSelectVariant={onSelectVariant} />
-            <div className="mx-auto max-w-5xl px-4">
-              <hr className="border-border" />
-            </div>
-          </div>
+      {typesWithProducts.length > 0 ? (
+        typesWithProducts.map((type) => (
+          <ProductRow
+            key={type}
+            title={typeLabels[type] ?? type}
+            products={products.filter((p) => p.type === type)}
+            onAdd={(p) => onAddProduct?.(p)}
+          />
         ))
       ) : (
         <p className="mx-auto max-w-5xl px-4 py-10 text-center text-muted-foreground">
@@ -60,5 +68,5 @@ export function StoreFront({
 
       <ContactSection imageUrl={contactImageUrl} onSubmit={onContactSubmit} />
     </main>
-  )
+  );
 }

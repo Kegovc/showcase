@@ -35,3 +35,7 @@ public/                    assets estáticos (imágenes, iconos)
   `store-front-island.tsx`, montada con `client:load`.
 - Los datos son de ejemplo en `src/pages/index.astro`; se sustituirán por
   una capa de dominio + adaptadores en fases posteriores.
+
+
+
+> opencode -s ses_087dc2718ffe7xIYsxGdrbsx1O
