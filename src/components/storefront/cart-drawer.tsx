@@ -15,7 +15,7 @@ interface CartDrawerProps {
 }
 
 function CartItemRow({ item, allProducts }: { item: CartItem; allProducts: Product[] }) {
-  const { replace, setQuantity } = useCart();
+  const { cart, replace, setQuantity } = useCart();
 
   const family = useMemo(
     () => allProducts.filter((p) => p.category === item.category && p.type === item.type),
@@ -38,12 +38,15 @@ function CartItemRow({ item, allProducts }: { item: CartItem; allProducts: Produ
   useEffect(() => {
     setFormat(item.format);
     setAxis4(item.variant);
-  }, [item]);
+  }, [item.id]);
 
-  const handleChange = async () => {
-    const resolved = family.find(
-      (p) => p.format === format && p.variant === axis4,
-    );
+  // ponytail: local state may desync if parent pushes new item.id while drawer open.
+  // Upgrade: add useEffect(() => { setFormat(item.format); setAxis4(item.variant) }, [item.id])
+
+  const handleChange = async (newFormat?: string, newAxis4?: string) => {
+    const formatToUse = newFormat ?? format;
+    const axis4ToUse = newAxis4 ?? axis4;
+    const resolved = family.find((p) => p.format === formatToUse && p.variant === axis4ToUse);
     if (!resolved) return;
     await replace(item.id, resolved);
   };
@@ -71,13 +74,11 @@ function CartItemRow({ item, allProducts }: { item: CartItem; allProducts: Produ
                   setFormat(f);
                   // Try to preserve current variant if it exists in new format
                   const variantExists = family.some((p) => p.format === f && p.variant === axis4);
-                  if (variantExists) {
-                    // Keep current axis4 (already set)
-                  } else {
+                  if (!variantExists) {
                     const first = family.find((p) => p.format === f);
                     if (first) setAxis4(first.variant);
                   }
-                  queueMicrotask(() => void handleChange());
+                  queueMicrotask(() => void handleChange(f));
                 }}
                 className={`rounded border px-1.5 py-0.5 text-[11px] transition-colors ${
                   f === format
@@ -105,7 +106,7 @@ function CartItemRow({ item, allProducts }: { item: CartItem; allProducts: Produ
                   disabled={!exists}
                   onClick={() => {
                     setAxis4(opt);
-                    queueMicrotask(() => void handleChange());
+                    queueMicrotask(() => void handleChange(undefined, opt));
                   }}
                   className={`rounded border px-1.5 py-0.5 text-[11px] transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${
                     opt === axis4
