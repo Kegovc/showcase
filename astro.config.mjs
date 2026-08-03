@@ -4,13 +4,17 @@ import react from '@astrojs/react'
 import sitemap from '@astrojs/sitemap'
 import tailwindcss from '@tailwindcss/vite'
 
+const isProduction = process.env.NODE_ENV === 'production';
+const repoName = 'e-commerce-clothing-app';
+const githubUser = 'TU_USUARIO_GITHUB'; // CAMBIA ESTO por tu usuario de GitHub
+
 // https://astro.build/config
-// Define la URL canónica del sitio (requerida para sitemap y OG absolutos).
-// CAMBIA esto por tu dominio real al deployar.
 export default defineConfig({
-  site: 'https://tienda-ejemplo.com',
+  site: `https://${githubUser}.github.io`,
+  base: isProduction ? `/${repoName}/` : undefined,
   integrations: [react(), sitemap()],
   vite: {
     plugins: [tailwindcss()],
   },
+  output: 'static',
 })
