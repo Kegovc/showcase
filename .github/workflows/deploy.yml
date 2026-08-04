@@ -29,7 +29,7 @@ jobs:
       - run: echo "VITE_COMPANY_ID=$VITE_COMPANY_ID"
       - run: echo "VITE_MP_PUBLIC_KEY=$VITE_MP_PUBLIC_KEY"
       - run: npm install
-      - run: npm run build
+      - run: npm run build 2>&1 | tee build.log
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
