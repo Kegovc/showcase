@@ -39,12 +39,6 @@ const fallbackProductsByCategory: Record<string, Product[]> = {
   ],
 };
 
-const fallbackHeroSlides: HeroSlide[] = [
-  { id: "s1", imageUrl: "images/hero-collection.png", subtitle: "Nueva colección", title: "Otoño / Invierno 2026", ctaLabel: "Ver colección", href: "#" },
-  { id: "s2", imageUrl: "images/hero-sale.png", subtitle: "Tiempo limitado", title: "Hasta 40% de descuento", ctaLabel: "Comprar ofertas", href: "#" },
-  { id: "s3", imageUrl: "images/hero.png", subtitle: "Para él y para ella", title: "Esenciales del guardarropa", ctaLabel: "Explorar", href: "#" },
-];
-
 async function fetchFromAPI<T>(endpoint: string, fallback: T): Promise<T> {
   try {
     const response = await fetch(`${API_BASE}/${endpoint}`, {
