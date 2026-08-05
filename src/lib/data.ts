@@ -39,11 +39,27 @@ const fallbackProductsByCategory: Record<string, Product[]> = {
   ],
 };
 
+// During build time (SSR), skip API calls entirely and use fallback data
+// This avoids network issues during build on GitHub Actions
+const isBuildTime = import.meta.env.PROD && import.meta.env.SSR;
+
 async function fetchFromAPI<T>(endpoint: string, fallback: T): Promise<T> {
+  // During build time, skip API calls entirely to avoid network issues
+  if (isBuildTime) {
+    return fallback;
+  }
+
   try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+
     const response = await fetch(`${API_BASE}/${endpoint}`, {
       headers: { 'x-company-id': import.meta.env.VITE_COMPANY_ID || 'sire' },
+      signal: controller.signal,
     });
+    
+    clearTimeout(timeoutId);
+    
     if (!response.ok) throw new Error(`API error: ${response.status}`);
     return await response.json();
   } catch {
