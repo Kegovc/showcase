@@ -39,9 +39,9 @@ const fallbackProductsByCategory: Record<string, Product[]> = {
   ],
 };
 
-// During build time (SSR), skip API calls entirely and use fallback data
-// This avoids network issues during build on GitHub Actions
-const isBuildTime = import.meta.env.PROD && import.meta.env.SSR;
+// During build time (static generation), skip API calls entirely to avoid network issues
+// Check if we're in a build context (no window object, or running in Node.js build environment)
+const isBuildTime = typeof window === 'undefined' && typeof process !== 'undefined' && process.env.NODE_ENV === 'production';
 
 async function fetchFromAPI<T>(endpoint: string, fallback: T): Promise<T> {
   // During build time, skip API calls entirely to avoid network issues
