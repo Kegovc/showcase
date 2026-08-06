@@ -40,8 +40,8 @@ const fallbackProductsByCategory: Record<string, Product[]> = {
 };
 
 // During build time (static generation), skip API calls entirely to avoid network issues
-// Check if we're in a build context (no window object, or running in Node.js build environment)
-const isBuildTime = typeof window === 'undefined' && typeof process !== 'undefined' && process.env.NODE_ENV === 'production';
+// Check if we're in a build context via environment variable
+const isBuildTime = import.meta.env.BUILD_TIME === 'true';
 
 async function fetchFromAPI<T>(endpoint: string, fallback: T): Promise<T> {
   // During build time, skip API calls entirely to avoid network issues
